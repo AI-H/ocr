@@ -3,6 +3,8 @@ package com.feiek.cloud.utils;
 import com.alibaba.fastjson.JSON;
 import com.feiek.cloud.utils.HttpClient;
 import com.github.wxpay.sdk.WXPayUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -14,7 +16,14 @@ import java.util.*;
  * @date  创建时间 2019/4/18 16:30
  * @version 1.0
  */
+@Component
 public class OcrUtil {
+
+
+    @Value("${tx.appKey}")
+    private  String appKey;
+    @Value("${tx.appid}")
+    private  String appid;
 
     public static void main(String[] args) throws Exception {
         InputStream in=null;
@@ -25,8 +34,8 @@ public class OcrUtil {
         in.read(data);
         in.close();
 
-        String s = imageToWords(data);
-        System.out.println(s);
+//        String s = imageToWords(data);
+//        System.out.println(s);
     }
 
     /**
@@ -35,10 +44,7 @@ public class OcrUtil {
      * @return
      * @throws Exception
      */
-    public static String imageToWords(byte[] image) throws Exception {
-        //腾讯平台创建的应用信息
-        String appkey="VQnxQKthGpvU7jLV";
-        String appid="2115052860";
+    public  String imageToWords(byte[] image) throws Exception {
         //返回的参数
         Map<String, String> map = new HashMap<>();
         String ctime=String.valueOf((int)(System.currentTimeMillis()/1000));
@@ -62,7 +68,7 @@ public class OcrUtil {
 
         map.put("image",s);
         map.put("sign","");
-        String sign = generateSignature(map,appkey);
+        String sign = generateSignature(map,appKey);
         map.put("sign",sign);
         System.out.println(map);
         //2.发送请求

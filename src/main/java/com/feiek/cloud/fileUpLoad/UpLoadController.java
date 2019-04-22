@@ -4,6 +4,7 @@ package com.feiek.cloud.fileUpLoad;
 import com.feiek.cloud.utils.OcrUtil;
 import com.feiek.cloud.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,13 +20,16 @@ import java.util.Map;
 @RequestMapping("/upload/")
 public class UpLoadController {
 
-    //文件保存地址
-//    private static final String uploadPicturePath="D:\\uploadFile\\";
-    private static final String uploadPicturePath="/usr/local/tomcat838/webapps/ROOT/imageWord/";
-
+    @Value("${upload.filePath}")
+    private   String  uploadPicturePath ;
+    @Value("${upload.fileLocalPath}")
+    private   String  uploadLocalPicturePath ;
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private OcrUtil ocrUtil;
 
     @CrossOrigin
     @PostMapping("image")
@@ -81,7 +85,7 @@ public class UpLoadController {
                         byte[] data = new byte[in.available()];
                         in.read(data);
                         in.close();
-                        String s = OcrUtil.imageToWords(data);
+                        String s = ocrUtil.imageToWords(data);
                         map.put("image",s);
                     } catch (Exception e) {
                         e.printStackTrace();
