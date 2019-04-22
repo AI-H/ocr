@@ -1,0 +1,131 @@
+<!--<!DOCTYPE html>-->
+<html lang="en">
+<script src="js/jquery-2.2.3.min.js"></script>
+<!--<script src="js/angular.min.js"></script>-->
+<script>
+    function uploadPic() {
+        $("#shibie").attr("disabled","disabled");
+        var form = document.getElementById('upload'),
+            formData = new FormData(form);
+        $.ajax({
+            url:"http://39.108.219.222:8081/upload/image",
+            type:"post",
+            data:formData,
+            processData:false,
+            contentType:false,
+            success:function(res){
+                // alert(data);
+                // alert(res.data.entity);
+                // if(res){
+                //     alert("上传成功！");
+                // }
+                console.log(res.entity.image);
+                $("#imageWord").html(res.entity.image);
+                $("#image").html("http://39.108.219.222:8080"+res.entity.path);
+                $('#imgSrc').attr("src","http://39.108.219.222:8080"+res.entity.path);
+                // console.log(res.data.entity.image)
+
+                $("#shibie").removeAttr("disabled");
+
+            },
+            error:function(err){
+                $("#shibie").removeAttr("disabled");
+                alert("稍后重试",err);
+
+            }
+        })
+
+
+    }
+
+    $(function() {
+        $("#pic2").click(function () {
+            $("#upload2").click(); //隐藏了input:file样式后，点击头像就可以本地上传
+            $("#upload2").on("change",function(){
+                var objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
+                if (objUrl) {
+                    $("#pic2").attr("src", objUrl) ; //将图片路径存入src中，显示出图片
+                }
+            });
+        });
+    });
+    function getObjectURL(file) {
+        var url = null ;
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url ;
+    }
+
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>图文识别</title>
+</head>
+<body>
+
+
+
+<form id="upload" enctype="multipart/form-data" method="post">
+    <table align="center">
+        <tr>
+            <td>
+                <img style="width:200px" id="pic2" alt="点击上传图片" src="http://39.108.219.222:8080/" >
+                <input id="upload2" name="file" accept="image/*" type="file" style="display: none"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" placeholder="请输入您的英文名"  name="text"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="shibie" type="button" value="识别" onclick="uploadPic();"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    图片可上传至服务器，此为网络路径，可以使用此路径访问图片<br>
+                    图片路径：<br>
+                    <hr>
+                    <span id="image" ></span>
+                    <hr>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                   识别结果：<br>
+                    <hr>
+                    <span id="imageWord">等待识别。。。</span>
+                    <hr>
+                </div>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <span class="showUrl"><br>原图片如下：<br></span>
+                <img id="imgSrc" src="" class="showPic" alt="">
+            </td>
+        </tr>
+
+    </table>
+
+
+</form>
+</body>
+</html>
