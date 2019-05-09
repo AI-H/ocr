@@ -31,6 +31,7 @@
             height: 100%;
             overflow-x: hidden;
             color: #fff;
+            background-color: #000;
         }
         #content img{
             width:100%;
@@ -57,6 +58,7 @@
             position: relative;
             margin-right: 60px;
             cursor: pointer;
+            border-radius: 5px;
         }
         #main .right{
             width: 465px;
@@ -136,7 +138,9 @@
             font-size: 18px;
             padding-top: 10px;
             line-height: 26px;
-            text-indent: 2em;
+            /*开始空两格*/
+            /*text-indent: 2em;*/
+            white-space: pre-line;
         }
         #loading{  
             position:fixed;  
@@ -173,11 +177,13 @@
                             <input type="text" placeholder="请输入您的英文名" name="text">
                         </div>
                         <div class="btn">
-                            <button id="shibie" onclick="uploadPic()">识别</button>
+                            <button id="shibie" onclick="uploadPic()">腾讯云识别</button>
+                            <button style="margin-left:5px;background-color:#ad0000;" id="shibie2" onclick="uploadPic2()">华为云识别</button>
+                            <button style="margin-left:5px;background-color:#00ad00;" id="shibie3" onclick="uploadPic3()">百度云识别</button>
                         </div>
                         <div>
                             <h3>提示：</h3>
-                            <p>图片可上传至服务器，获得网络路径，可以使用网络路径在网络上访问图片</p>
+                            <p>图片可上传至服务器，此为网络路径，可以使用此路径访问图片图片路径：</p>
                         </div>
                     </div>
                 </div>
@@ -201,11 +207,10 @@
         </div> 
     </div>
 
-
-
-
     <script>
+        //腾讯云
         function uploadPic() {
+            console.log('腾讯云')
             $('#main').css({
                 "opacity": "0.5",
                 "background": "#000",
@@ -214,12 +219,16 @@
                 "opacity": "1"
             })
             $("#shibie").attr("disabled","disabled");
-            $("#shibie").css('background','#ddd'); 
-            $("#loading").show(); 
+            $("#shibie2").attr("disabled","disabled");
+            $("#shibie3").attr("disabled","disabled");
+            $("#shibie").css('background','#ddd');
+            $("#shibie2").css('background','#ddd'); 
+            $("#shibie3").css('background','#ddd');
+            $("#loading").show();
             var form = document.getElementById('upload'),
                 formData = new FormData(form);
             $.ajax({
-                url:"http://39.108.219.222:8081/upload/image",
+                url:"http://39.108.219.222:8081/upload/tengxun",
                 type:"post",
                 data:formData,
                 processData:false,
@@ -238,6 +247,10 @@
 
                     $("#shibie").removeAttr("disabled");
                     $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
                     $("#loading").hide(); 
                     $('#main').css({
                         "opacity": "1",
@@ -250,6 +263,10 @@
                 error:function(err){
                     $("#shibie").removeAttr("disabled");
                     $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
                     $("#loading").hide(); 
                     $('#main').css({
                         "opacity": "1",
@@ -262,9 +279,158 @@
 
                 }
             })
-
-
         }
+        //华为云
+        function uploadPic2() {
+            console.log('华为云')
+            $('#main').css({
+                "opacity": "0.5",
+                "background": "#000",
+            })
+            $('#loading').css({
+                "opacity": "1"
+            })
+            $("#shibie").attr("disabled","disabled");
+            $("#shibie2").attr("disabled","disabled");
+            $("#shibie3").attr("disabled","disabled");
+            $("#shibie").css('background','#ddd');
+            $("#shibie2").css('background','#ddd'); 
+            $("#shibie3").css('background','#ddd');
+            $("#loading").show();
+            var form = document.getElementById('upload'),
+                formData = new FormData(form);
+            $.ajax({
+                url:"http://localhost:8081/upload/huawei",
+                type:"post",
+                data:formData,
+                processData:false,
+                contentType:false,
+                success:function(res){
+                    // alert(data);
+                    // alert(res.data.entity);
+                    // if(res){
+                    //     alert("上传成功！");
+                    // }
+                    console.log(res.entity.image);
+                    $("#imageWord").val(res.entity.image);
+                    // $("#imageWord").innerHTML=res.entity.image;
+                    $("#image").val("http://39.108.219.222:80"+res.entity.path);
+                    
+                    // $('#imgSrc').attr("src","http://39.108.219.222:8080"+res.entity.path);
+                    // console.log(res.data.entity.image)
+
+                    $("#shibie").removeAttr("disabled");
+                    $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
+                    $("#loading").hide(); 
+                    $('#main').css({
+                        "opacity": "1",
+                        "background": "",
+                    })
+                    $('#loading').css({
+                        "opacity": "1"
+                    })
+                },
+                error:function(err){
+                    $("#shibie").removeAttr("disabled");
+                    $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
+                    $("#loading").hide(); 
+                    $('#main').css({
+                        "opacity": "1",
+                        "background": "",
+                    })
+                    $('#loading').css({
+                        "opacity": "1"
+                    })
+                    alert("稍后重试",err);
+
+                }
+            })
+        }
+
+
+
+        //百度云
+        function uploadPic3() {
+            console.log('百度云')
+            $('#main').css({
+                "opacity": "0.5",
+                "background": "#000",
+            })
+            $('#loading').css({
+                "opacity": "1"
+            })
+            $("#shibie").attr("disabled","disabled");
+            $("#shibie2").attr("disabled","disabled");
+            $("#shibie3").attr("disabled","disabled");
+            $("#shibie").css('background','#ddd');
+            $("#shibie2").css('background','#ddd');
+            $("#shibie3").css('background','#ddd');
+            $("#loading").show();
+            var form = document.getElementById('upload'),
+                formData = new FormData(form);
+            $.ajax({
+                url:"http://localhost:8081/upload/baidu",
+                type:"post",
+                data:formData,
+                processData:false,
+                contentType:false,
+                success:function(res){
+                    // alert(data);
+                    // alert(res.data.entity);
+                    // if(res){
+                    //     alert("上传成功！");
+                    // }
+                    console.log(res.entity.image);
+                    $("#imageWord").val(res.entity.image);
+                    $("#image").val("http://39.108.219.222:80"+res.entity.path);
+
+                    // $('#imgSrc').attr("src","http://39.108.219.222:8080"+res.entity.path);
+                    // console.log(res.data.entity.image)
+
+                    $("#shibie").removeAttr("disabled");
+                    $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
+                    $("#loading").hide();
+                    $('#main').css({
+                        "opacity": "1",
+                        "background": "",
+                    })
+                    $('#loading').css({
+                        "opacity": "1"
+                    })
+                },
+                error:function(err){
+                    $("#shibie").removeAttr("disabled");
+                    $("#shibie").css('background','#1153e8');
+                    $("#shibie2").removeAttr("disabled");
+                    $("#shibie2").css('background','#ad0000');
+                    $("#shibie3").removeAttr("disabled");
+                    $("#shibie3").css('background','#00ad00');
+                    $("#loading").hide();
+                    $('#main').css({
+                        "opacity": "1",
+                        "background": "",
+                    })
+                    $('#loading').css({
+                        "opacity": "1"
+                    })
+                    alert("稍后重试",err);
+
+                }
+            })
+        }
+      
 
         $(function() {
             $("#isShowText").click(function () {
@@ -273,10 +439,13 @@
                     var objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
                     if (objUrl) {
                         $("#isShowText").hide();
-                        $("#pic2").attr("src", objUrl) ; //将图片路径存入src中，显示出图片
+                        $("#pic2").attr("src", objUrl) ; //将图片路径存入src中，显示出图片 
                     }
                 });
             });
+            $('#pic2').click(function(){
+                $("#upload2").click(); 
+            })
         });
         function getObjectURL(file) {
             var url = null ;
@@ -289,6 +458,40 @@
             }
             return url ;
         }
+
+
+        // 拖拽上传
+        $(function(){ 
+        //阻止浏览器默认行为。 
+            $(document).on({ 
+                dragleave:function(e){    //拖离 
+                    e.preventDefault(); 
+                }, 
+                drop:function(e){  //拖后放 
+                    e.preventDefault(); 
+                }, 
+                dragenter:function(e){    //拖进 
+                    e.preventDefault(); 
+                }, 
+                dragover:function(e){    //拖来拖去 
+                    e.preventDefault(); 
+                } 
+            }); 
+    
+            var box = document.getElementById('isShowText'); //拖拽区域 
+            box.addEventListener("drop",function(e){ 
+                e.preventDefault(); //取消默认浏览器拖拽效果 
+                var fileList = e.dataTransfer.files; //获取文件对象 
+                //检测是否是拖拽文件到页面的操作 
+                if(fileList.length == 0){ 
+                    return false; 
+                } 
+                $("#upload2").click();
+                console.log('测试',fileList)
+            },false); 
+        });
+    
+   
     
     
     </script>

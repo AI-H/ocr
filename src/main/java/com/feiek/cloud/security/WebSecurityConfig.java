@@ -1,5 +1,7 @@
 package com.feiek.cloud.security;
 
+import com.feiek.cloud.service.UserService;
+import com.feiek.cloud.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +20,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    /**
+     * 装载一个对象
+     */
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-
+    private UserServiceImpl service;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.customUserDetailsService).passwordEncoder(this.passwordEncoder());
+        auth.userDetailsService(this.service).passwordEncoder(this.passwordEncoder());
     }
 
     @Bean

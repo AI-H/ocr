@@ -1,8 +1,12 @@
-package com.feiek.cloud.fileUpLoad;
+package com.feiek.cloud.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author 飞客不去
+ * @date  创建时间 2019/5/8 10:41
+ * @version 1.0
+ */
 public class Response<T> implements Serializable {
 
 	/**
@@ -84,6 +88,10 @@ public class Response<T> implements Serializable {
 
 	public static <T> Response<T> failed(String message, Integer statusCode) {
 		return new Response<T>(Status.FAILED, message, null, statusCode);
+	}
+
+	public static <T> Response<T> failed(String message, T entity) {
+		return new Response<T>(Status.FAILED, message, entity, 0);
 	}
 
 	@Override

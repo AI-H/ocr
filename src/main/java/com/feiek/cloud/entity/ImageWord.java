@@ -1,4 +1,4 @@
-package com.feiek.cloud.ocr;
+package com.feiek.cloud.entity;
 
 
 import java.util.List;
